@@ -25,6 +25,7 @@ import { LibraryRequest } from '../../interfaces/library.interface';
                 class="w-full"
                 autofocus
                 required
+                autocomplete="off"
                 (keydown.enter)="refreshSuggestions()"
               />
               <p class="text-xs text-slate-400 absolute -bottom-5 left-0">Press Enter to search</p>

@@ -12,12 +12,12 @@ import { LibraryCardModule } from '../../components/library-card.component';
 
 @Component({
   selector: 'app-libraries',
-  template: ` <section>
+  template: ` <section class="mt-10">
     <header class="flex items-center gap-4">
-      <h2>Libraries</h2>
+      <h2 class="text-2xl font-semibold ">Libraries</h2>
       <button zzButton size="sm" (click)="openModal()">Add New</button>
     </header>
-    <div>
+    <div class="mt-6">
       <ul class="grid gap-4 grid-cols-4">
         <li *ngFor="let library of libraries$ | async">
           <app-library-card [library]="library"></app-library-card>

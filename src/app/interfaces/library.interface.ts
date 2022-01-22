@@ -11,6 +11,7 @@ export interface Library {
   license: string;
   github: LibraryGithubDetail;
   npm: LibraryNpmDetail;
+  createdAt: string;
 }
 
 export interface LibraryLinks {
