@@ -1,3 +1,11 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind base;
+
+body {
+  margin: 0rem;
+}
+
+:root {
+  --primary: hsl(238deg 30% 53%);
+}

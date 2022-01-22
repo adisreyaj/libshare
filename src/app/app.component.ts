@@ -3,8 +3,7 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <button zzButton variant="neutral">Hello World</button>
-  `,
+    <router-outlet></router-outlet>`,
 })
 export class AppComponent {
 }
