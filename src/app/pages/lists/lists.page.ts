@@ -2,14 +2,14 @@ import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-lists',
   template: ``,
 })
-export class HomePage {}
+export class ListsPage {}
 
 @NgModule({
-  declarations: [HomePage],
-  imports: [RouterModule.forChild([{ path: '', component: HomePage }])],
-  exports: [HomePage],
+  declarations: [ListsPage],
+  imports: [RouterModule.forChild([{ path: '', component: ListsPage }])],
+  exports: [ListsPage],
 })
-export class HomeModule {}
+export class ListsModule {}
