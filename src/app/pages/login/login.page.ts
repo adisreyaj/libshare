@@ -1,7 +1,9 @@
 import { Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule, FormInputModule } from 'zigzag';
+import { AuthService } from '../../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -15,13 +17,13 @@ import { ButtonModule, FormInputModule } from 'zigzag';
     >
       <div class="w-full h-100">
         <h1 class="text-xl md:text-2xl font-bold leading-tight mt-12">Log in to your account</h1>
-        <form class="mt-6">
+        <form class="mt-6" (ngSubmit)="login()">
           <div>
-            <label class="block text-sm text-gray-700">Email Address</label>
+            <label class="block text-sm text-gray-700" for="email">Email Address</label>
             <input
               type="email"
-              name=""
-              id=""
+              name="email"
+              id="email"
               placeholder="Enter Email Address"
               zzInput
               variant="fill"
@@ -29,21 +31,23 @@ import { ButtonModule, FormInputModule } from 'zigzag';
               autofocus
               autocomplete
               required
+              [(ngModel)]="credentials.email"
             />
           </div>
 
           <div class="mt-4">
-            <label class="block text-sm text-gray-700">Password</label>
+            <label class="block text-sm text-gray-700" for="email">Password</label>
             <input
               type="password"
-              name=""
-              id=""
+              name="password"
+              id="password"
               placeholder="Enter Password"
               minlength="6"
               zzInput
               variant="fill"
               class="w-full"
               required
+              [(ngModel)]="credentials.password"
             />
           </div>
           <button type="submit" class="w-full mt-10" zzButton variant="primary">Log In</button>
@@ -66,7 +70,31 @@ import { ButtonModule, FormInputModule } from 'zigzag';
     `,
   ],
 })
-export class LoginPage {}
+export class LoginPage {
+  credentials = {
+    email: '',
+    password: '',
+  };
+
+  constructor(private readonly auth: AuthService, private readonly router: Router) {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  login() {
+    this.auth.login(this.credentials.email, this.credentials.password).subscribe({
+      next: ({ token }) => {
+        localStorage.setItem('token', token);
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+}
 
 @NgModule({
   declarations: [LoginPage],
@@ -79,6 +107,7 @@ export class LoginPage {}
       },
     ]),
     ButtonModule,
+    FormsModule,
     FormInputModule,
   ],
 })
