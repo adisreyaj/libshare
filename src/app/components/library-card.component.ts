@@ -8,19 +8,7 @@ import { ButtonModule } from 'zigzag';
 @Component({
   selector: 'app-library-card',
   template: `
-    <div class="relative flex flex-col p-2 bg-white rounded-md shadow-md hover:shadow-lg" *ngIf="library">
-      <button
-        class="absolute p-1 bg-white rounded-lg cursor-pointer focus:outline-none"
-        style="top: 2px;right: 2px;"
-        tippy="Toggle Favorite"
-        aria-label="Toggle favorite"
-      >
-        <rmx-icon
-          [name]="true ? 'star-fill' : 'star-line'"
-          class="text-gray-500 icon-md"
-          [class.text-primary]="true"
-        ></rmx-icon>
-      </button>
+    <div class="relative border border-slate-200 flex flex-col p-3 bg-white rounded-md hover:shadow-lg" *ngIf="library">
       <div class="flex items-center">
         <img
           [src]="library?.github?.image"
@@ -37,21 +25,30 @@ import { ButtonModule } from 'zigzag';
         </div>
       </div>
       <ng-container *ngTemplateOutlet="repoDetails; context: { $implicit: library }"></ng-container>
-      <footer class="flex items-center justify-between pb-1 mt-3">
+      <footer class="flex items-center justify-between pb-1 pt-3 border-t border-slate-200">
         <div class="flex items-center">
-          <rmx-icon name="time-line" class="mr-1 text-gray-500icon-xs"></rmx-icon>
-          <p class="text-xs text-gray-500">Date</p>
+          <rmx-icon name="time-line" class="mr-1 text-gray-500 icon-xs"></rmx-icon>
+          <p class="text-xs text-gray-500">{{ library.createdAt | date: 'MMM d' }}</p>
         </div>
         <div class="flex items-center">
           <div class="relative dropdown"></div>
-          <button zzButton size="sm" class="mr-2">More</button>
-          <!--          <a zzButton size="sm" target="_blank" [href]="library.links.homepage" rel="noopener noreferrer">View</a>-->
+
+          <a
+            zzButton
+            variant="primary"
+            size="sm"
+            target="_blank"
+            [href]="library.links.homepage ?? '#'"
+            rel="noopener noreferrer"
+            >View</a
+          >
+          <button zzButton size="sm" class="ml-2">More</button>
         </div>
       </footer>
     </div>
 
     <ng-template #repoDetails let-library>
-      <div class="flex items-center justify-between pb-2 mb-3 text-xs text-gray-400 border-b">
+      <div class="flex items-center justify-between pb-2 text-xs text-gray-400">
         <div class="flex items-center">
           <div class="mr-3">
             <p class="font-semibold text-gray-700 line-clamp-1">

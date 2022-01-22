@@ -4,9 +4,11 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-header',
   template: `
-    <header class="mt-4">
+    <header class="bg-white sticky top-0 border-b border-slate-300">
       <div class="box header h-full flex items-center gap-8 box">
-        <h1 routerLink="/">Lib Share</h1>
+        <a routerLink="/" class="flex items-center gap-2">
+          <img src="assets/images/logo.svg" alt="Lib Share" [style.height.px]="40" />
+        </a>
         <nav>
           <ul class="flex items-center gap-8">
             <li routerLink="/lists">Lists</li>
@@ -20,7 +22,7 @@ import { RouterModule } from '@angular/router';
     `
       .header {
         height: 64px;
-        @apply bg-white border rounded-lg border-slate-300 text-slate-700;
+        @apply text-slate-700;
       }
 
       nav ul li,
