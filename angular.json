@@ -31,7 +31,10 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "zigzag/projects/zigzag/styles/components/tooltip.scss",
+              "zigzag/projects/zigzag/styles/components/dropdown.scss",
+              "zigzag/projects/zigzag/styles/components/modal.scss"
             ],
             "scripts": []
           },

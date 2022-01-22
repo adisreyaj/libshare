@@ -3,9 +3,23 @@
 @tailwind base;
 
 body {
-  margin: 0rem;
+  margin: 0;
+  @apply text-slate-800;
 }
 
 :root {
-  --primary: hsl(238deg 30% 53%);
+  --primary: hsl(238deg 30% 33%);
+}
+
+.box {
+  @apply mx-auto px-6;
+  max-width: 1200px;
+
+  @media screen and (min-width: 1600px) {
+    max-width: 1400px;
+  }
+}
+
+.zz-modal {
+  @apply p-4;
 }
