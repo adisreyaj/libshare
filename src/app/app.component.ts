@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: `
+    <button zzButton variant="neutral">Hello World</button>
+  `,
 })
 export class AppComponent {
-  title = 'libshare-web';
 }
