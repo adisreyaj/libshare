@@ -1,17 +1,17 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ModalRef } from 'zigzag';
 import { LibrariesService } from '../../services/libraries.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, catchError, filter, map, of, Subject, switchMap, tap } from 'rxjs';
-import { LibraryRequest } from '../../interfaces/library.interface';
+import { Library, LibraryRequest } from '../../interfaces/library.interface';
 
 @Component({
   template: `
     <header class="mb-4">
-      <h1 class="title">Add Library</h1>
+      <h1 class="title">{{ this.modalRef.data.isEditMode ? 'Update' : 'Add' }} Library</h1>
     </header>
-    <div>
-      <form [formGroup]="libraryForm" (ngSubmit)="upsert()" id="libraryForm">
+    <div cdkTrapFocus>
+      <form [formGroup]="libraryForm" id="libraryForm">
         <div class="max-w-sm">
           <div>
             <label for="name">Name</label>
@@ -98,7 +98,7 @@ import { LibraryRequest } from '../../interfaces/library.interface';
       </form>
     </div>
     <footer class="flex items-center gap-4 mt-8">
-      <button zzButton variant="primary" type="submit" form="libraryForm">Save</button>
+      <button zzButton variant="primary" (click)="upsert()">Save</button>
       <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
     </footer>
 
@@ -155,7 +155,7 @@ import { LibraryRequest } from '../../interfaces/library.interface';
     `,
   ],
 })
-export class LibraryModal {
+export class LibraryModal implements OnInit {
   libraryForm = this.fb.group({
     name: ['', Validators.required],
     image: [''],
@@ -208,7 +208,7 @@ export class LibraryModal {
   }
 
   constructor(
-    public readonly modalRef: ModalRef,
+    public readonly modalRef: ModalRef<{ isEditMode: boolean; library: Library }>,
     private readonly fb: FormBuilder,
     private readonly libraries: LibrariesService,
   ) {
@@ -232,6 +232,19 @@ export class LibraryModal {
       });
   }
 
+  ngOnInit() {
+    if (this.modalData?.isEditMode ?? false) {
+      this.libraryDetails = this.modalData.library;
+      this.suggestionSelected = true;
+      this.libraryForm.get('name')?.setValue(this.modalData.library.name);
+      this.setValues(this.modalData.library);
+    }
+  }
+
+  get modalData() {
+    return this.modalRef.data;
+  }
+
   autoFill(name: string) {
     this.suggestionSelected = true;
     this.suggestionsVisibleSubject.next(false);
@@ -241,10 +254,7 @@ export class LibraryModal {
       this.libraries.getLibraryMetadata(name).subscribe({
         next: (result) => {
           this.libraryDetails = result;
-          this.libraryForm.get('description')?.setValue(result.description);
-          this.libraryForm.get('github')?.setValue(result.links.repository);
-          this.libraryForm.get('homepage')?.setValue(result.links.homepage);
-          this.libraryForm.get('image')?.setValue(result.github.image);
+          this.setValues(result);
           this.metadataLoadingSubject.next(false);
         },
         error: () => {
@@ -252,6 +262,13 @@ export class LibraryModal {
         },
       });
     }
+  }
+
+  private setValues(result: Library) {
+    this.libraryForm.get('description')?.setValue(result.description);
+    this.libraryForm.get('github')?.setValue(result.links.repository ?? result.github.url ?? '');
+    this.libraryForm.get('homepage')?.setValue(result.links.homepage);
+    this.libraryForm.get('image')?.setValue(result.github.image);
   }
 
   refreshSuggestions() {
@@ -262,12 +279,26 @@ export class LibraryModal {
 
   upsert() {
     if (this.libraryForm.valid && this.libraryDetails) {
-      this.libraries.addNew(this.libraryDetails).subscribe({
-        next: () => {
-          this.modalRef.close(true);
-        },
-      });
+      this.modalData.isEditMode
+        ? this.libraries.update(this.modalData.library.id, this.getUpdatedLibraryDetails())
+        : this.libraries.addNew(this.libraryDetails).subscribe({
+            next: () => {
+              this.modalRef.close(true);
+            },
+          });
     }
+  }
+
+  private getUpdatedLibraryDetails() {
+    if (this.libraryDetails == null) {
+      return {};
+    }
+    const { name, description, homepage, github } = this.libraryForm.value;
+    if (name) this.libraryDetails.name = name;
+    if (description) this.libraryDetails.description = description;
+    if (homepage) this.libraryDetails.links.homepage = homepage;
+    if (github) this.libraryDetails.links.repository = github;
+    return this.libraryDetails;
   }
 
   onSuggestionKeyDown(code: string) {

@@ -1,9 +1,10 @@
-import { Component, Input, NgModule } from '@angular/core';
+import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core';
 import { Library } from '../interfaces/library.interface';
 import { CommonModule } from '@angular/common';
 import { CountPipeModule } from '../pipes/count.pipe';
 import { IconModule } from '../icon.module';
-import { ButtonModule } from 'zigzag';
+import { ButtonModule, DropdownModule } from 'zigzag';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-library-card',
@@ -25,7 +26,7 @@ import { ButtonModule } from 'zigzag';
         </div>
       </div>
       <ng-container *ngTemplateOutlet="repoDetails; context: { $implicit: library }"></ng-container>
-      <footer class="flex items-center justify-between pb-1 pt-3 border-t border-slate-200">
+      <footer class="flex items-center justify-between pt-3 border-t border-slate-200">
         <div class="flex items-center">
           <rmx-icon name="time-line" class="mr-1 text-gray-500 icon-xs"></rmx-icon>
           <p class="text-xs text-gray-500">{{ library.createdAt | date: 'MMM d' }}</p>
@@ -42,7 +43,19 @@ import { ButtonModule } from 'zigzag';
             rel="noopener noreferrer"
             >View</a
           >
-          <button zzButton size="sm" class="ml-2">More</button>
+          <button zzButton size="sm" [zzDropdownTrigger]="libraryMoreOptions" placement="bottom-start" class="ml-2">
+            More
+            <zz-dropdown #libraryMoreOptions>
+              <li zzDropdownItem>
+                <a [href]="library.links.repository" target="_blank" rel="noreferrer noopener"> View Repo </a>
+              </li>
+              <li zzDropdownItem zzDropdownCloseOnClick>Add to List</li>
+              <li zzDropdownItem (click)="edit.emit(library)" zzDropdownCloseOnClick>Edit</li>
+              <li zzDropdownItem class="text-red-600" (click)="delete.emit(library.id)" zzDropdownCloseOnClick>
+                Delete
+              </li>
+            </zz-dropdown>
+          </button>
         </div>
       </footer>
     </div>
@@ -74,7 +87,7 @@ import { ButtonModule } from 'zigzag';
               <a
                 target="_blank"
                 rel="noopener noreferrer"
-                [href]="'https://choosealicense.com/licenses/' + (library?.metadata?.license | lowercase)"
+                [href]="'https://choosealicense.com/licenses/' + (library?.license | lowercase)"
                 aria-label="License details"
               >
                 <rmx-icon name="share-box-line" class="icon-xxs text-primary"></rmx-icon>
@@ -90,11 +103,19 @@ import { ButtonModule } from 'zigzag';
 export class LibraryCardComponent {
   @Input()
   library: Library | null = null;
+
+  @Output()
+  edit = new EventEmitter<Library>();
+
+  @Output()
+  delete = new EventEmitter<string>();
+
+  constructor(private readonly router: Router) {}
 }
 
 @NgModule({
   declarations: [LibraryCardComponent],
   exports: [LibraryCardComponent],
-  imports: [CommonModule, CountPipeModule, IconModule, ButtonModule],
+  imports: [CommonModule, CountPipeModule, IconModule, ButtonModule, DropdownModule],
 })
 export class LibraryCardModule {}

@@ -14,6 +14,15 @@ export class LibrariesService {
     return this.http.post<{ id: string }>(`${this.apiUrl}/libraries`, library);
   }
 
+  delete(id: string) {
+    return this.http.delete(`${this.apiUrl}/libraries/${id}`);
+  }
+
+  update(id: string, library: Partial<Library>) {
+    const { id: someId, createdAt, ...otherLibrary } = library;
+    return this.http.put<{ id: string }>(`${this.apiUrl}/libraries/${id}`, otherLibrary);
+  }
+
   getAll() {
     return this.http.get<Library[]>(`${this.apiUrl}/libraries`).pipe(shareReplay(1));
   }

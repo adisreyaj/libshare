@@ -1,9 +1,7 @@
-export type LibraryRequest = Partial<Omit<Library, 'name' | 'description'>> & {
-  name: string;
-  description: string;
-};
+export type LibraryRequest = Omit<Library, 'id' | 'createdAt'>;
 
 export interface Library {
+  id: string;
   name: string;
   version: string;
   description: string;
@@ -28,6 +26,7 @@ export interface LibraryGithubDetail {
   language: string;
   homepage: string;
   image: string;
+  url: string;
 }
 
 export interface LibraryNpmDetail {

@@ -1,7 +1,7 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
-import { mapTo, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { filter, mapTo, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { Library } from '../../interfaces/library.interface';
 import { LibrariesService } from '../../services/libraries.service';
 import { CommonModule } from '@angular/common';
@@ -14,13 +14,17 @@ import { LibraryCardModule } from '../../components/library-card.component';
   selector: 'app-libraries',
   template: ` <section class="mt-10">
     <header class="flex items-center gap-4">
-      <h2 class="text-2xl font-semibold ">Libraries</h2>
+      <h2 class="text-xl font-semibold">Libraries</h2>
       <button zzButton size="sm" (click)="openModal()">Add New</button>
     </header>
     <div class="mt-6">
       <ul class="grid gap-4 grid-cols-4">
         <li *ngFor="let library of libraries$ | async">
-          <app-library-card [library]="library"></app-library-card>
+          <app-library-card
+            [library]="library"
+            (edit)="editLibrary($event)"
+            (delete)="deleteLibrary($event)"
+          ></app-library-card>
         </li>
       </ul>
     </div>
@@ -37,15 +41,34 @@ export class LibrariesPage {
   }
 
   openModal() {
-    const { afterClosed$ } = this.modal.open(LibraryModal, {
+    const { afterClosed$ } = this.modal.open<{ isEditMode: boolean }>(LibraryModal, {
       size: 'lg',
       data: {
-        name: '',
-        description: '',
+        isEditMode: false,
       },
     });
-    afterClosed$.subscribe({
-      next: (isSuccess) => {
+    afterClosed$.pipe(filter((isSuccess) => isSuccess as boolean)).subscribe({
+      next: () => {
+        this.refreshSubject.next();
+      },
+    });
+  }
+
+  deleteLibrary(id: string) {
+    this.librariesService.delete(id).subscribe({
+      next: () => {
+        this.refreshSubject.next();
+      },
+    });
+  }
+
+  editLibrary(library: Library) {
+    const { afterClosed$ } = this.modal.open<{ isEditMode: boolean; library: Library }>(LibraryModal, {
+      size: 'lg',
+      data: { isEditMode: true, library },
+    });
+    afterClosed$.pipe(filter((isSuccess) => isSuccess as boolean)).subscribe({
+      next: () => {
         this.refreshSubject.next();
       },
     });
