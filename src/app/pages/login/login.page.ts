@@ -12,12 +12,31 @@ declare var VANTA: any;
   template: ` <section class="flex flex-col md:flex-row h-screen items-center">
     <div class="bg-indigo-600 hidden relative lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
       <div class="w-full h-full" id="vanta"></div>
-      <!--      <img src="https://source.unsplash.com/random" alt="" class="w-full h-full object-cover" />-->
-      <div class="h-full w-full grid place-items-center absolute top-0 left-0 bg-black bg-opacity-50">
-        <div class="flex gap-4 font-bold text-8xl font-heading items-center text-white">
-          <p class="uppercase">Curate</p>
-          <p class="text-4xl font-normal -my-1">&</p>
-          <p class="uppercase">Share</p>
+      <div class="absolute z-20 bottom-4 w-full left-0 text-center">
+        <a href="https://github.com/adisreyaj" target="_blank" class="text-white font-medium text-md">
+          <style>
+            .heart {
+              color: #e25555;
+            }
+          </style>
+          I <span class="heart">♥</span> Opensource
+        </a>
+      </div>
+      <div class="h-full w-full grid place-items-center absolute z-10 top-0 left-0 bg-black bg-opacity-50">
+        <div>
+          <div class="flex gap-4 font-bold text-8xl font-heading items-center text-white">
+            <p class="uppercase">Curate</p>
+            <p class="text-4xl font-normal -my-1">&</p>
+            <p class="uppercase">Share</p>
+          </div>
+          <div class="text-white mt-10 max-w-md mx-auto">
+            <p class="text-md font-medium">
+              Worked on a side project? Showcase all the cool Open Source libraries that powered your project and let
+              the world know about them.<br />
+              <br />Libshare brings more visibility to OSS projects and makes it easy for people to explore about great
+              libraries.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -104,10 +123,10 @@ export class LoginPage implements AfterViewInit {
       minWidth: 200.0,
       baseColor: '#3b3d6d',
       backgroundColor: '#3b3d6d',
-      amplitudeFactor: 2.9,
-      xOffset: -0.41,
-      yOffset: 0.37,
-      size: 3.0,
+      amplitudeFactor: 0.9,
+      xOffset: 0,
+      yOffset: 0.2,
+      size: 1.0,
     });
   }
 
