@@ -2,7 +2,8 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_URL } from '../core/tokens/api.token';
 import { Library, LibraryRequest } from '../interfaces/library.interface';
-import { shareReplay } from 'rxjs';
+import { catchError, of, shareReplay } from 'rxjs';
+import { ListLibraryData } from '../interfaces/list.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -31,6 +32,16 @@ export class LibrariesService {
     return this.http
       .get<{ name: string }[]>(`${this.apiUrl}/libraries/suggestions/${encodeURIComponent(query)}`)
       .pipe();
+  }
+
+  searchLibraries(query: string) {
+    return this.http
+      .get<ListLibraryData[]>(`${this.apiUrl}/libraries/search`, {
+        params: {
+          q: encodeURIComponent(query),
+        },
+      })
+      .pipe(catchError(() => of([])));
   }
 
   getLibraryMetadata(name: string) {
