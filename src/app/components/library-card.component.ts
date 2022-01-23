@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { CountPipeModule } from '../pipes/count.pipe';
 import { IconModule } from '../icon.module';
 import { ButtonModule, DropdownModule } from 'zigzag';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-library-card',
@@ -109,8 +108,6 @@ export class LibraryCardComponent {
 
   @Output()
   delete = new EventEmitter<string>();
-
-  constructor(private readonly router: Router) {}
 }
 
 @NgModule({

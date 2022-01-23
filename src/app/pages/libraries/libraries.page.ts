@@ -9,14 +9,12 @@ import { LibraryModal } from './library.modal';
 import { ButtonModule, FormInputModule, ModalService } from 'zigzag';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryCardModule } from '../../components/library-card.component';
+import { PageHeaderModule } from '../../components/page-header.component';
 
 @Component({
   selector: 'app-libraries',
   template: ` <section class="mt-10">
-    <header class="flex items-center gap-4">
-      <h2 class="text-xl font-semibold">Libraries</h2>
-      <button zzButton size="sm" (click)="openModal()">Add New</button>
-    </header>
+    <app-page-header title="Libraries" buttonText="Add New" (clicked)="openModal()"></app-page-header>
     <div class="mt-6">
       <ul class="grid gap-4 grid-cols-4">
         <li *ngFor="let library of libraries$ | async">
@@ -86,6 +84,7 @@ export class LibrariesPage {
     ReactiveFormsModule,
     A11yModule,
     LibraryCardModule,
+    PageHeaderModule,
   ],
   exports: [LibrariesPage],
 })

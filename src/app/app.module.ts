@@ -9,6 +9,8 @@ import { API_URL } from './core/tokens/api.token';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { ShellModule } from './shell.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { USER_DATA } from './core/tokens/user.token';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +32,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: USER_DATA,
+      useFactory: (auth: AuthService) => {
+        return auth.user$;
+      },
+      deps: [AuthService],
     },
   ],
   bootstrap: [AppComponent],

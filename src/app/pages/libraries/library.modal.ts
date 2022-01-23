@@ -26,9 +26,11 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
                 autofocus
                 required
                 autocomplete="off"
-                (keydown.enter)="refreshSuggestions()"
+                (keydown)="refreshSuggestions($event.ctrlKey, $event.code)"
               />
-              <p class="text-xs text-slate-400 absolute -bottom-5 left-0">Press Enter to search</p>
+              <p class="text-xs text-slate-400 absolute -bottom-8 left-0">
+                Press <kbd>Enter</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd> to search
+              </p>
               <ng-container *ngIf="suggestionsLoading$ | async">
                 <ng-container *ngTemplateOutlet="loader"></ng-container>
               </ng-container>
@@ -38,7 +40,7 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
                     <ng-container *ngFor="let suggestion of suggestions; index as i">
                       <li
                         (click)="autoFill(suggestion.name)"
-                        (keydown)="this.onSuggestionKeyDown($event.code)"
+                        (keydown)="this.onSuggestionKeyDown($event.code, suggestion.name)"
                         tabindex="0"
                       >
                         {{ suggestion.name }}
@@ -50,7 +52,7 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
             </div>
           </div>
         </div>
-        <section class="mt-6" *ngIf="suggestionSelected">
+        <section class="mt-10" *ngIf="suggestionSelected">
           <div>
             <label>Logo</label>
             <ng-container *ngIf="this.libraryForm.get('image')?.value as image; else noImage">
@@ -97,7 +99,7 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
         </section>
       </form>
     </div>
-    <footer class="flex items-center gap-4 mt-8">
+    <footer class="flex items-center gap-4 mt-12">
       <button zzButton variant="primary" (click)="upsert()">Save</button>
       <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
     </footer>
@@ -271,8 +273,9 @@ export class LibraryModal implements OnInit {
     this.libraryForm.get('image')?.setValue(result.github.image);
   }
 
-  refreshSuggestions() {
-    if (this.libraryForm.get('name')?.value !== '') {
+  refreshSuggestions(ctrlKey: boolean, code: string) {
+    const isKeyValid = code === 'Enter' || (code === 'Space' && ctrlKey);
+    if (this.libraryForm.get('name')?.value !== '' && isKeyValid) {
       this.refreshSuggestionsSubject.next();
     }
   }
@@ -301,9 +304,10 @@ export class LibraryModal implements OnInit {
     return this.libraryDetails;
   }
 
-  onSuggestionKeyDown(code: string) {
+  onSuggestionKeyDown(code: string, value: string) {
     if (['Enter', 'Space'].includes(code)) {
-      this.autoFill(this.libraryForm.get('name')?.value);
+      this.libraryForm.get('name')?.setValue(value);
+      this.autoFill(value);
     }
   }
 
