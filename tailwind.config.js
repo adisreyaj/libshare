@@ -5,6 +5,12 @@ module.exports = {
       colors: {
         primary: 'var(--primary)',
       },
+      fontFamily: {
+        heading: ['Caveat Brush', 'cursive'],
+      },
+      fontSize: {
+        '8xl': '7rem',
+      },
     },
   },
   plugins: [require('@tailwindcss/line-clamp')],

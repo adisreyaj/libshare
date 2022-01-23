@@ -1,22 +1,35 @@
-import { Component, NgModule } from '@angular/core';
+import { AfterViewInit, Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule, FormInputModule } from 'zigzag';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 
+declare var VANTA: any;
+
 @Component({
   selector: 'app-login',
   template: ` <section class="flex flex-col md:flex-row h-screen items-center">
-    <div class="bg-indigo-600 hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
-      <img src="https://source.unsplash.com/random" alt="" class="w-full h-full object-cover" />
+    <div class="bg-indigo-600 hidden relative lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+      <div class="w-full h-full" id="vanta"></div>
+      <!--      <img src="https://source.unsplash.com/random" alt="" class="w-full h-full object-cover" />-->
+      <div class="h-full w-full grid place-items-center absolute top-0 left-0 bg-black bg-opacity-50">
+        <div class="flex gap-4 font-bold text-8xl font-heading items-center text-white">
+          <p class="uppercase">Curate</p>
+          <p class="text-4xl font-normal -my-1">&</p>
+          <p class="uppercase">Share</p>
+        </div>
+      </div>
     </div>
     <div
       class="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto  md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
         flex items-center justify-center"
     >
-      <div class="w-full h-100">
-        <h1 class="text-xl md:text-2xl font-bold leading-tight mt-12">Log in to your account</h1>
+      <div class="w-full h-100 max-w-md">
+        <div class="flex items-stretch gap-4">
+          <img src="assets/images/logo.svg" alt="Lib Share" class="w-20 h-20" />
+        </div>
+        <h1 class="text-xl md:text-2xl font-bold leading-tight mt-8">Log in to LibShare</h1>
         <form class="mt-6" (ngSubmit)="login()">
           <div>
             <label class="block text-sm text-gray-700" for="email">Email Address</label>
@@ -55,9 +68,7 @@ import { FormsModule } from '@angular/forms';
 
         <p class="mt-8">
           Need an account?
-          <a routerLink="/signup" class="text-primary hover:text-blue-700 font-semibold"
-            >Create an account</a
-          >
+          <a routerLink="/signup" class="text-primary hover:text-blue-700 font-semibold">Create an account</a>
         </p>
       </div>
     </div>
@@ -70,7 +81,7 @@ import { FormsModule } from '@angular/forms';
     `,
   ],
 })
-export class LoginPage {
+export class LoginPage implements AfterViewInit {
   credentials = {
     email: '',
     password: '',
@@ -81,6 +92,23 @@ export class LoginPage {
     if (token != null) {
       this.router.navigate(['/']);
     }
+  }
+
+  ngAfterViewInit() {
+    VANTA.HALO({
+      el: '#vanta',
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      baseColor: '#3b3d6d',
+      backgroundColor: '#3b3d6d',
+      amplitudeFactor: 2.9,
+      xOffset: -0.41,
+      yOffset: 0.37,
+      size: 3.0,
+    });
   }
 
   login() {
