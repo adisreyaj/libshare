@@ -1,14 +1,11 @@
 module.exports = {
-  content: [
-    "src/**/*.{ts,html}",
-    "zigzag/projects/zigzag/src/lib/components/**/*.{ts,html}",
-  ],
+  content: ['src/**/*.{ts,html}', 'zigzag/projects/zigzag/src/lib/components/**/*.{ts,html}'],
   theme: {
     extend: {
       colors: {
-        primary: "var(--primary)",
+        primary: 'var(--primary)',
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/line-clamp')],
 };

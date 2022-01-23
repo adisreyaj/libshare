@@ -1,3 +1,66 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind base;
+
+body {
+  margin: 0;
+  @apply text-slate-800;
+}
+
+:root {
+  --primary: hsl(238deg 30% 33%);
+}
+
+.box {
+  @apply mx-auto px-6;
+  max-width: 1200px;
+
+  @media screen and (min-width: 1600px) {
+    max-width: 1400px;
+  }
+}
+
+.zz-modal {
+  @apply p-4;
+}
+
+
+.icon-xxs {
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.icon-xs {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.icon-sm {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.icon-md {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.icon-lg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.icon-xl {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.icon-2xl {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.icon-3xl {
+  width: 32px !important;
+  height: 32px !important;
+}
