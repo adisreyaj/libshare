@@ -81,7 +81,7 @@ import { ButtonModule, DropdownModule } from 'zigzag';
           <div>
             <div class="flex items-center">
               <p class="mr-1 font-semibold text-gray-700 line-clamp-1">
-                {{ library?.metadata?.license }}
+                {{ library?.license }}
               </p>
               <a
                 target="_blank"
