@@ -1,8 +1,31 @@
 import { NgModule } from '@angular/core';
-import { RemixIconModule, RiShareBoxLine, RiStarFill, RiStarLine, RiTimeLine } from 'angular-remix-icon';
+import {
+  RemixIconModule,
+  RiArrowDownSLine,
+  RiCloseLine,
+  RiLockLine,
+  RiLockUnlockLine,
+  RiMore2Fill,
+  RiShareBoxLine,
+  RiStarFill,
+  RiStarLine,
+  RiTimeLine,
+} from 'angular-remix-icon';
 
 @NgModule({
-  imports: [RemixIconModule.configure({ RiShareBoxLine, RiStarLine, RiStarFill, RiTimeLine })],
+  imports: [
+    RemixIconModule.configure({
+      RiCloseLine,
+      RiShareBoxLine,
+      RiStarLine,
+      RiStarFill,
+      RiTimeLine,
+      RiArrowDownSLine,
+      RiLockLine,
+      RiLockUnlockLine,
+      RiMore2Fill,
+    }),
+  ],
   exports: [RemixIconModule],
 })
 export class IconModule {}

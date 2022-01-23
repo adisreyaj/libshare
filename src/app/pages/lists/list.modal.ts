@@ -1,107 +1,122 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { BehaviorSubject, catchError, filter, of, Subject, switchMap, tap } from 'rxjs';
+import { FormArray, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { List, ListLibraryData } from '../../interfaces/list.interface';
 import { ModalRef } from 'zigzag';
+import { ListsService } from '../../services/lists.service';
 import { LibrariesService } from '../../services/libraries.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { BehaviorSubject, catchError, filter, map, of, Subject, switchMap, tap } from 'rxjs';
-import { Library, LibraryRequest } from '../../interfaces/library.interface';
 
 @Component({
+  selector: 'app-list-modal',
   template: `
-    <header class="mb-4">
-      <h1 class="title">{{ this.modalRef.data.isEditMode ? 'Update' : 'Add' }} Library</h1>
-    </header>
     <div cdkTrapFocus>
-      <form [formGroup]="libraryForm" id="libraryForm">
-        <div class="max-w-sm">
+      <header class="mb-4">
+        <h1 class="title">{{ this.modalRef.data.isEditMode ? 'Update' : 'Create New' }} List</h1>
+      </header>
+      <div>
+        <form [formGroup]="listForm" id="listForm">
           <div>
             <label for="name">Name</label>
             <div class="relative">
               <input
                 type="text"
                 formControlName="name"
+                placeholder="My fav front-end frameworks"
                 id="name"
                 zzInput
                 variant="fill"
                 class="w-full"
-                autofocus
                 required
+                autofocus
                 autocomplete="off"
-                (keydown.enter)="refreshSuggestions()"
               />
-              <p class="text-xs text-slate-400 absolute -bottom-5 left-0">Press Enter to search</p>
-              <ng-container *ngIf="suggestionsLoading$ | async">
-                <ng-container *ngTemplateOutlet="loader"></ng-container>
-              </ng-container>
-              <ng-container *ngIf="suggestionsVisible$ | async">
-                <div id="suggestions" class="suggestions" *ngIf="suggestions$ | async as suggestions" cdkTrapFocus>
-                  <ul>
-                    <ng-container *ngFor="let suggestion of suggestions; index as i">
-                      <li
-                        (click)="autoFill(suggestion.name)"
-                        (keydown)="this.onSuggestionKeyDown($event.code)"
-                        tabindex="0"
-                      >
-                        {{ suggestion.name }}
-                      </li>
-                    </ng-container>
-                  </ul>
-                </div>
-              </ng-container>
             </div>
-          </div>
-        </div>
-        <section class="mt-6" *ngIf="suggestionSelected">
-          <div>
-            <label>Logo</label>
-            <ng-container *ngIf="this.libraryForm.get('image')?.value as image; else noImage">
-              <img [src]="image" [alt]="this.libraryForm.get('name')?.value" class="w-16 h-16" />
-            </ng-container>
-            <ng-template #noImage>
-              <div class="text-center w-16 h-16 rounded-full bg-slate-100 grid place-items-center">
-                <span class="text-gray-500 text-xs">No image</span>
-              </div>
-            </ng-template>
           </div>
           <div class="mt-4">
             <label for="description">Description</label>
             <div class="relative">
-              <input type="text" formControlName="description" id="description" zzInput variant="fill" class="w-full" />
-
-              <ng-container *ngIf="metadataLoading$ | async">
-                <ng-container *ngTemplateOutlet="loader"></ng-container>
-              </ng-container>
+              <input
+                type="text"
+                formControlName="description"
+                id="description"
+                zzInput
+                variant="fill"
+                class="w-full"
+                autocomplete="off"
+              />
             </div>
           </div>
-          <fieldset class="grid md:grid-cols-2 gap-4 mt-4">
+          <div class="flex items-center gap-2 mt-4">
+            <div class="relative">
+              <input type="checkbox" formControlName="public" id="public" zzInput variant="fill" />
+            </div>
+            <label for="public" class="!mb-0">Is Public?</label>
+          </div>
+          <div class="mt-4">
+            <h3>Add Libraries to List</h3>
             <div>
-              <label for="github">Github</label>
               <div class="relative">
-                <input type="text" formControlName="github" id="github" zzInput variant="fill" class="w-full" />
-
-                <ng-container *ngIf="metadataLoading$ | async">
+                <input
+                  type="text"
+                  [formControl]="searchInput"
+                  placeholder="Search for libraries in your account"
+                  zzInput
+                  variant="fill"
+                  class="w-full"
+                  autocomplete="off"
+                  #searchInputRef
+                  (keydown)="refreshSuggestions($event.ctrlKey, $event.code, searchInput.value)"
+                />
+                <p class="text-xs text-slate-400 absolute -bottom-8 left-0">
+                  Press <kbd>Enter</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd> to search
+                </p>
+                <ng-container *ngIf="suggestionsLoading$ | async">
                   <ng-container *ngTemplateOutlet="loader"></ng-container>
                 </ng-container>
-              </div>
-            </div>
-            <div>
-              <label for="homepage">Homepage</label>
-              <div class="relative">
-                <input type="text" formControlName="homepage" id="homepage" zzInput variant="fill" class="w-full" />
-
-                <ng-container *ngIf="metadataLoading$ | async">
-                  <ng-container *ngTemplateOutlet="loader"></ng-container>
+                <ng-container *ngIf="suggestionsVisible$ | async">
+                  <div id="suggestions" class="suggestions" *ngIf="suggestions$ | async as suggestions" cdkTrapFocus>
+                    <ul>
+                      <ng-container *ngFor="let suggestion of suggestions; index as i">
+                        <li
+                          (click)="addLibrary(suggestion)"
+                          (keydown)="onSuggestionKeyDown($event.code, suggestion)"
+                          tabindex="0"
+                        >
+                          {{ suggestion.name }}
+                        </li>
+                      </ng-container>
+                    </ul>
+                  </div>
                 </ng-container>
               </div>
+              <div formArrayName="libraries" class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-12">
+                <article
+                  *ngFor="let library of libraries.controls; index as i"
+                  class="relative flex items-center gap-2 bg-white p-2 rounded-md border border-slate-200 shadow-md"
+                >
+                  <button
+                    type="button"
+                    class="absolute focus:ring-1 focus:!bg-opacity-200 focus:ring-red-500 outline-none top-1 right-1 p-1 hover:!bg-opacity-20 !bg-red-500 !bg-opacity-10 text-red-600 rounded-full"
+                    (click)="removeLibraryFromList(i)"
+                  >
+                    <rmx-icon name="close-line" class="icon-sm"></rmx-icon>
+                  </button>
+                  <img [src]="library.value.image" [alt]="library.value.name" class="w-10 h-10" />
+                  <div>
+                    <p class="font-medium line-clamp-1">{{ library.value.name }}</p>
+                    <p class="line-clamp-2 text-sm">{{ library.value.description }}</p>
+                  </div>
+                </article>
+              </div>
             </div>
-          </fieldset>
-        </section>
-      </form>
+          </div>
+        </form>
+      </div>
+      <footer class="flex items-center gap-4 mt-8">
+        <button zzButton variant="primary" (click)="upsert()">Save</button>
+        <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
+      </footer>
     </div>
-    <footer class="flex items-center gap-4 mt-8">
-      <button zzButton variant="primary" (click)="upsert()">Save</button>
-      <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
-    </footer>
-
     <ng-template #loader>
       <div class="absolute top-0 right-2 h-full grid place-items-center">
         <svg
@@ -155,71 +170,45 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
     `,
   ],
 })
-export class LibraryModal implements OnInit {
-  libraryForm = this.fb.group({
+export class ListModal implements OnInit {
+  listForm = this.fb.group({
     name: ['', Validators.required],
-    image: [''],
     description: [''],
-    github: [''],
-    homepage: [''],
+    public: ['false', Validators.required],
+    libraries: this.fb.array([]),
   });
 
-  libraryDetails: LibraryRequest | null = null;
-
-  private suggestionsSubject = new BehaviorSubject<{ name: string }[]>([]);
+  searchInput = new FormControl('');
+  private suggestionsSubject = new BehaviorSubject<ListLibraryData[]>([]);
   suggestions$ = this.suggestionsSubject.asObservable();
 
-  private refreshSuggestionsSubject = new Subject<void>();
+  private refreshSuggestionsSubject = new Subject<string>();
 
   private suggestionsVisibleSubject = new BehaviorSubject<boolean>(false);
   suggestionsVisible$ = this.suggestionsVisibleSubject.asObservable();
 
-  private metadataLoadingSubject = new BehaviorSubject<boolean>(false);
-  metadataLoading$ = this.metadataLoadingSubject.asObservable().pipe(
-    tap((isLoading) => {
-      this.updateFieldsDisabledStates(isLoading);
-    }),
-  );
-
   private suggestionsLoadingSubject = new BehaviorSubject<boolean>(false);
-  suggestionsLoading$ = this.suggestionsLoadingSubject.asObservable().pipe(
-    tap((isLoading) => {
-      this.updateFieldsDisabledStates(isLoading);
-    }),
-  );
+  suggestionsLoading$ = this.suggestionsLoadingSubject.asObservable();
 
-  suggestionSelected = false;
-
-  @HostListener('keydown.esc')
-  onEsc() {
-    if (this.suggestionsVisibleSubject.value) {
-      this.suggestionsVisibleSubject.next(false);
-    }
+  get libraries(): FormArray {
+    return this.listForm.get('libraries') as FormArray;
   }
 
-  @HostListener('click', ['$event'])
-  onClick(event: MouseEvent) {
-    if (this.suggestionsVisibleSubject.value) {
-      const suggestionsElement = this.modalRef.element.querySelector('.suggestions');
-      if (suggestionsElement && !suggestionsElement.contains(event.target as Node)) {
-        this.suggestionsVisibleSubject.next(false);
-      }
-    }
-  }
+  @ViewChild('searchInputRef', { read: ElementRef }) searchInputRef?: ElementRef<HTMLInputElement>;
 
   constructor(
-    public readonly modalRef: ModalRef<{ isEditMode: boolean; library: Library }>,
     private readonly fb: FormBuilder,
-    private readonly libraries: LibrariesService,
+    private readonly listsService: ListsService,
+    private readonly librariesService: LibrariesService,
+    public readonly modalRef: ModalRef<{ isEditMode: boolean; list: List }>,
   ) {
     this.refreshSuggestionsSubject
       .asObservable()
       .pipe(
-        map(() => this.libraryForm.get('name')?.value),
         filter((name) => name != ''),
         tap(() => this.suggestionsLoadingSubject.next(true)),
         switchMap((name) => {
-          return this.libraries.getSuggestions(name);
+          return this.librariesService.searchLibraries(name);
         }),
         tap(() => this.suggestionsLoadingSubject.next(false)),
         catchError(() => of([])),
@@ -232,96 +221,60 @@ export class LibraryModal implements OnInit {
       });
   }
 
-  ngOnInit() {
-    if (this.modalData?.isEditMode ?? false) {
-      this.libraryDetails = this.modalData.library;
-      this.suggestionSelected = true;
-      this.libraryForm.get('name')?.setValue(this.modalData.library.name);
-      this.setValues(this.modalData.library);
-    }
-  }
-
   get modalData() {
     return this.modalRef.data;
   }
 
-  autoFill(name: string) {
-    this.suggestionSelected = true;
-    this.suggestionsVisibleSubject.next(false);
-    if (name !== '') {
-      this.metadataLoadingSubject.next(true);
-      this.resetDependentFields();
-      this.libraries.getLibraryMetadata(name).subscribe({
-        next: (result) => {
-          this.libraryDetails = result;
-          this.setValues(result);
-          this.metadataLoadingSubject.next(false);
-        },
-        error: () => {
-          this.metadataLoadingSubject.next(false);
+  ngOnInit() {
+    if (this.modalData?.isEditMode ?? false) {
+      this.setValues(this.modalData.list);
+    }
+  }
+
+  upsert() {
+    if (this.listForm.valid) {
+      const observable$ = this.modalData.isEditMode
+        ? this.listsService.update(this.modalData.list.id, this.listForm.value)
+        : this.listsService.addNew(this.listForm.value);
+      observable$.subscribe({
+        next: () => {
+          this.modalRef.close(true);
         },
       });
     }
   }
 
-  private setValues(result: Library) {
-    this.libraryForm.get('description')?.setValue(result.description);
-    this.libraryForm.get('github')?.setValue(result.links.repository ?? result.github.url ?? '');
-    this.libraryForm.get('homepage')?.setValue(result.links.homepage);
-    this.libraryForm.get('image')?.setValue(result.github.image);
-  }
-
-  refreshSuggestions() {
-    if (this.libraryForm.get('name')?.value !== '') {
-      this.refreshSuggestionsSubject.next();
+  refreshSuggestions(ctrlKey: boolean, code: string, query: string) {
+    if (code === 'Enter' || (code === 'Space' && ctrlKey)) {
+      this.refreshSuggestionsSubject.next(query);
     }
   }
 
-  upsert() {
-    if (this.libraryForm.valid && this.libraryDetails) {
-      this.modalData.isEditMode
-        ? this.libraries.update(this.modalData.library.id, this.getUpdatedLibraryDetails())
-        : this.libraries.addNew(this.libraryDetails).subscribe({
-            next: () => {
-              this.modalRef.close(true);
-            },
-          });
-    }
+  addLibrary(library: ListLibraryData) {
+    this.libraries.push(this.fb.control(library));
+    this.suggestionsVisibleSubject.next(false);
+    this.searchInput.reset();
+    setTimeout(() => {
+      this.searchInputRef?.nativeElement.focus();
+    });
   }
 
-  private getUpdatedLibraryDetails() {
-    if (this.libraryDetails == null) {
-      return {};
-    }
-    const { name, description, homepage, github } = this.libraryForm.value;
-    if (name) this.libraryDetails.name = name;
-    if (description) this.libraryDetails.description = description;
-    if (homepage) this.libraryDetails.links.homepage = homepage;
-    if (github) this.libraryDetails.links.repository = github;
-    return this.libraryDetails;
-  }
-
-  onSuggestionKeyDown(code: string) {
+  onSuggestionKeyDown(code: string, library: ListLibraryData) {
     if (['Enter', 'Space'].includes(code)) {
-      this.autoFill(this.libraryForm.get('name')?.value);
+      this.addLibrary(library);
     }
   }
 
-  private resetDependentFields() {
-    this.libraryForm.get('description')?.disable();
-    this.libraryForm.get('github')?.disable();
-    this.libraryForm.get('homepage')?.disable();
+  removeLibraryFromList(i: number) {
+    this.libraries.removeAt(i);
   }
 
-  private updateFieldsDisabledStates(isLoading: boolean) {
-    if (isLoading) {
-      this.libraryForm.get('description')?.disable();
-      this.libraryForm.get('github')?.disable();
-      this.libraryForm.get('homepage')?.disable();
-    } else {
-      this.libraryForm.get('description')?.enable();
-      this.libraryForm.get('github')?.enable();
-      this.libraryForm.get('homepage')?.enable();
-    }
+  private setValues(result: List) {
+    this.listForm.get('name')?.setValue(result.name);
+    this.listForm.get('description')?.setValue(result.description ?? '');
+    this.listForm.get('public')?.setValue(result.public);
+    (result.libraries ?? []).forEach((lib) => {
+      this.libraries.push(this.fb.control(lib));
+    });
   }
 }
