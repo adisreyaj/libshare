@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, NgModule, Output } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { List } from '../interfaces/list.interface';
 import { IconModule } from '../icon.module';
-import { ButtonModule, DropdownModule, TooltipModule } from 'zigzag';
+import { ButtonModule, ClipboardDirectiveModule, DropdownModule, TooltipModule } from 'zigzag';
 
 @Component({
   selector: 'app-list-card',
@@ -42,8 +42,14 @@ import { ButtonModule, DropdownModule, TooltipModule } from 'zigzag';
             More
             <zz-dropdown #moreOptions>
               <li zzDropdownItem zzDropdownCloseOnClick (click)="edit.emit(list)">Edit</li>
-              <li zzDropdownItem zzDropdownCloseOnClick>Share</li>
-              <li zzDropdownItem zzDropdownCloseOnClick *ngIf="list.public">Copy Public Link</li>
+              <li
+                zzDropdownItem
+                zzDropdownCloseOnClick
+                *ngIf="list.public"
+                [zzClipboard]="'http://localhost:4200/view/' + list.slug"
+              >
+                Copy Public Link
+              </li>
               <li zzDropdownItem class="text-red-600" zzDropdownCloseOnClick (click)="delete.emit(list)">Delete</li>
             </zz-dropdown>
           </button>
@@ -63,7 +69,7 @@ export class ListCardComponent {
 }
 
 @NgModule({
-  imports: [CommonModule, IconModule, ButtonModule, DropdownModule, TooltipModule],
+  imports: [CommonModule, IconModule, ButtonModule, DropdownModule, TooltipModule, ClipboardDirectiveModule],
   declarations: [ListCardComponent],
   exports: [ListCardComponent],
 })

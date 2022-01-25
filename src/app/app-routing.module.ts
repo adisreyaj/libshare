@@ -8,6 +8,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.page').then((m) => m.LoginModule),
   },
   {
+    path: 'view/:slug',
+    loadChildren: () => import('./pages/view/view.page').then((m) => m.ViewModule),
+  },
+  {
     path: '',
     component: ShellComponent,
     children: [

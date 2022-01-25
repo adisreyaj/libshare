@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { API_URL } from '../core/tokens/api.token';
-import { List, ListRequest } from '../interfaces/list.interface';
+import { List, ListPublic, ListRequestBase } from '../interfaces/list.interface';
 import { shareReplay } from 'rxjs';
 
 @Injectable({
@@ -10,7 +10,11 @@ import { shareReplay } from 'rxjs';
 export class ListsService {
   constructor(private readonly http: HttpClient, @Inject(API_URL) private readonly apiUrl: string) {}
 
-  addNew(list: ListRequest) {
+  getListBySlug(slug: string) {
+    return this.http.get<ListPublic>(`${this.apiUrl}/lists/public/${slug}`).pipe();
+  }
+
+  addNew(list: ListRequestBase) {
     return this.http.post<{ id: string }>(`${this.apiUrl}/lists`, list);
   }
 

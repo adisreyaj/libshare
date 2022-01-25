@@ -1,8 +1,15 @@
-export interface ListRequest {
+import { User } from './user.interface';
+import { Library } from './library.interface';
+
+export interface ListRequestBase {
   name: string;
   description: string;
-  libraries: ListLibraryData[];
+
   public: boolean;
+}
+
+export interface ListRequest extends ListRequestBase {
+  libraries: ListLibraryData[];
 }
 
 export interface List extends ListRequest {
@@ -10,6 +17,11 @@ export interface List extends ListRequest {
   slug: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ListPublic extends ListRequestBase {
+  libraries: Library[];
+  user: User;
 }
 
 export interface ListLibraryData {
