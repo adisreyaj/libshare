@@ -8,11 +8,11 @@ import { ButtonModule, DropdownModule } from 'zigzag';
 @Component({
   selector: 'app-library-card',
   template: `
-    <div class="relative border border-slate-200 flex flex-col p-3 bg-white rounded-md hover:shadow-lg" *ngIf="library">
+    <div class="relative flex flex-col rounded-md border border-slate-200 bg-white p-3 hover:shadow-lg" *ngIf="library">
       <div class="flex items-center">
         <img
           [src]="library?.github?.image"
-          class="w-12 h-12 mr-4 rounded-sm"
+          class="mr-4 h-12 w-12 rounded-sm"
           width="48px"
           height="48px"
           [alt]="library?.name"
@@ -25,13 +25,13 @@ import { ButtonModule, DropdownModule } from 'zigzag';
         </div>
       </div>
       <ng-container *ngTemplateOutlet="repoDetails; context: { $implicit: library }"></ng-container>
-      <footer class="flex items-center justify-between pt-3 border-t border-slate-200">
+      <footer class="flex items-center justify-between border-t border-slate-200 pt-3">
         <div class="flex items-center">
-          <rmx-icon name="time-line" class="mr-1 text-gray-500 icon-xs"></rmx-icon>
+          <rmx-icon name="time-line" class="icon-xs mr-1 text-gray-500"></rmx-icon>
           <p class="text-xs text-gray-500">{{ library.createdAt | date: 'MMM d' }}</p>
         </div>
         <div class="flex items-center">
-          <div class="relative dropdown"></div>
+          <div class="dropdown relative"></div>
 
           <a
             zzButton

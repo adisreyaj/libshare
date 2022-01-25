@@ -7,33 +7,44 @@ import { CommonModule } from '@angular/common';
 import { IconModule } from '../icon.module';
 import { DropdownModule } from 'zigzag';
 
+const linkClasses = {
+  base: 'h-4/5 hover:underline font-medium text-slate-600 rounded-md px-4 grid place-items-center decoration-wavy underline-offset-4 decoration-2 transition-all duration-200',
+  active: 'underline text-primary',
+};
+
 @Component({
   selector: 'app-header',
   template: `
-    <header class="bg-white sticky top-0 border-b border-slate-300">
-      <div class="box header h-full flex items-center justify-between box">
-        <div class="flex items-center gap-8">
+    <header class="sticky top-0 border-b border-slate-300 bg-white">
+      <div class="box header box flex h-full items-center justify-between">
+        <div class="flex h-full items-center gap-8">
           <a routerLink="/" class="flex items-center gap-2">
             <img src="assets/images/logo.svg" alt="Lib Share" [style.height.px]="40" />
+            <div>
+              <p class="-mb-2 font-heading text-2xl font-semibold">LibShare</p>
+              <p class="font-heading text-sm text-slate-400">Curate <span>&</span> Share</p>
+            </div>
           </a>
-          <nav>
-            <ul class="flex items-center gap-8">
-              <li routerLink="/lists">Lists</li>
-              <li routerLink="/libraries">Libraries</li>
+          <nav class="h-full">
+            <ul class="flex h-full items-center gap-4">
+              <li routerLink="/libraries" routerLinkActive="${linkClasses.active}" class="${linkClasses.base}">
+                Libraries
+              </li>
+              <li routerLink="/lists" routerLinkActive="${linkClasses.active}" class="${linkClasses.base}">Lists</li>
             </ul>
           </nav>
         </div>
         <button
           *ngIf="user$ | async as user"
-          class="flex items-center gap-2 hover:bg-slate-100 p-2 rounded-md"
+          class="flex items-center gap-2 rounded-md p-2 hover:bg-slate-100"
           [zzDropdownTrigger]="profileDropdown"
         >
           <img
             [src]="'https://avatar.tobi.sh/' + user.firstName"
             [alt]="user.firstName"
-            class="rounded-full w-10 h-10"
+            class="h-10 w-10 rounded-full"
           />
-          <div class="text-sm flex flex-col items-start text-slate-700">
+          <div class="flex flex-col items-start text-sm text-slate-700">
             <p class="font-medium">{{ user.firstName }}</p>
             <p>{{ user.lastName }}</p>
           </div>

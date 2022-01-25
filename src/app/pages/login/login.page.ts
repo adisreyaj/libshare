@@ -9,27 +9,27 @@ declare var VANTA: any;
 
 @Component({
   selector: 'app-login',
-  template: ` <section class="flex flex-col md:flex-row h-screen items-center">
-    <div class="bg-indigo-600 hidden relative lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
-      <div class="w-full h-full" id="vanta"></div>
-      <div class="absolute z-20 bottom-4 w-full left-0 text-center">
-        <a href="https://github.com/adisreyaj" target="_blank" class="text-white font-medium text-md">
+  template: ` <section class="flex h-screen flex-col items-center md:flex-row">
+    <div class="relative hidden h-screen w-full bg-indigo-600 md:w-1/2 lg:block xl:w-2/3">
+      <div class="h-full w-full" id="vanta"></div>
+      <div class="absolute bottom-4 left-0 z-20 w-full text-center">
+        <a href="https://github.com/adisreyaj" target="_blank" class="text-md font-medium text-white">
           <style>
             .heart {
               color: #e25555;
             }
           </style>
-          I <span class="heart">♥</span> Opensource
+          For the <span class="heart">♥</span> of Opensource
         </a>
       </div>
-      <div class="h-full w-full grid place-items-center absolute z-10 top-0 left-0 bg-black bg-opacity-50">
+      <div class="absolute top-0 left-0 z-10 grid h-full w-full place-items-center bg-black bg-opacity-50">
         <div>
-          <div class="flex gap-4 font-bold text-8xl font-heading items-center text-white">
-            <p class="uppercase">Curate</p>
-            <p class="text-4xl font-normal -my-1">&</p>
-            <p class="uppercase">Share</p>
+          <div class="flex items-center gap-4 font-heading text-8xl font-bold text-white">
+            <p class="">Curate</p>
+            <p class="-my-1 text-4xl font-normal">&</p>
+            <p class="">Share</p>
           </div>
-          <div class="text-white mt-10 max-w-md mx-auto">
+          <div class="mx-auto mt-10 max-w-md text-white">
             <p class="text-md font-medium">
               Worked on a side project? Showcase all the cool Open Source libraries that powered your project and let
               the world know about them.<br />
@@ -41,14 +41,18 @@ declare var VANTA: any;
       </div>
     </div>
     <div
-      class="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto  md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12
-        flex items-center justify-center"
+      class="flex h-screen w-full items-center justify-center  bg-white px-6 md:mx-auto md:w-1/2 md:max-w-md lg:max-w-full
+        lg:px-16 xl:w-1/3 xl:px-12"
     >
-      <div class="w-full h-100 max-w-md">
-        <div class="flex items-stretch gap-4">
-          <img src="assets/images/logo.svg" alt="Lib Share" class="w-20 h-20" />
+      <div class="h-100 w-full max-w-md">
+        <div class="flex items-center gap-4">
+          <img src="assets/images/logo.svg" alt="Lib Share" class="h-16 w-16" />
+          <div>
+            <p class="-mb-2 font-heading text-4xl font-semibold">LibShare</p>
+            <p class="font-heading text-lg text-slate-400">Curate <span>&</span> Share</p>
+          </div>
         </div>
-        <h1 class="text-xl md:text-2xl font-bold leading-tight mt-8">Log in to LibShare</h1>
+        <h1 class="mt-8 text-xl font-bold leading-tight md:text-2xl">Log in to your account.</h1>
         <form class="mt-6" (ngSubmit)="login()">
           <div>
             <label class="block text-sm text-gray-700" for="email">Email Address</label>
@@ -82,12 +86,12 @@ declare var VANTA: any;
               [(ngModel)]="credentials.password"
             />
           </div>
-          <button type="submit" class="w-full mt-10" zzButton variant="primary">Log In</button>
+          <button type="submit" class="mt-10 w-full" zzButton variant="primary">Log In</button>
         </form>
 
         <p class="mt-8">
           Need an account?
-          <a routerLink="/signup" class="text-primary hover:text-blue-700 font-semibold">Create an account</a>
+          <a routerLink="/signup" class="font-semibold text-primary hover:text-blue-700">Create an account</a>
         </p>
       </div>
     </div>
@@ -122,7 +126,7 @@ export class LoginPage implements AfterViewInit {
       minHeight: 200.0,
       minWidth: 200.0,
       baseColor: '#3b3d6d',
-      backgroundColor: '#3b3d6d',
+      backgroundColor: '#2B2C30',
       amplitudeFactor: 0.9,
       xOffset: 0,
       yOffset: 0.2,

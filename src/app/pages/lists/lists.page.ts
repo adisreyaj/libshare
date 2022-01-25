@@ -17,7 +17,7 @@ import { ListCardModule } from '../../components/list-card.component';
   template: ` <section class="mt-10">
     <app-page-header title="Lists" buttonText="Add New" (clicked)="openModal()"></app-page-header>
     <div class="mt-6">
-      <ul class="grid gap-4 grid-cols-4">
+      <ul class="grid grid-cols-4 gap-4">
         <ng-container *ngFor="let list of lists$ | async">
           <app-list-card [list]="list" (edit)="editList($event)" (delete)="deleteList($event)"></app-list-card>
         </ng-container>

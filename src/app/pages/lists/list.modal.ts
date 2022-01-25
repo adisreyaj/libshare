@@ -46,7 +46,7 @@ import { LibrariesService } from '../../services/libraries.service';
               />
             </div>
           </div>
-          <div class="flex items-center gap-2 mt-4">
+          <div class="mt-4 flex items-center gap-2">
             <div class="relative">
               <input type="checkbox" formControlName="public" id="public" zzInput variant="fill" />
             </div>
@@ -67,7 +67,7 @@ import { LibrariesService } from '../../services/libraries.service';
                   #searchInputRef
                   (keydown)="refreshSuggestions($event.ctrlKey, $event.code, searchInput.value)"
                 />
-                <p class="text-xs text-slate-400 absolute -bottom-8 left-0">
+                <p class="absolute -bottom-8 left-0 text-xs text-slate-400">
                   Press <kbd>Enter</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd> to search
                 </p>
                 <ng-container *ngIf="suggestionsLoading$ | async">
@@ -89,22 +89,22 @@ import { LibrariesService } from '../../services/libraries.service';
                   </div>
                 </ng-container>
               </div>
-              <div formArrayName="libraries" class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-12">
+              <div formArrayName="libraries" class="mt-12 grid grid-cols-1 gap-2 md:grid-cols-3">
                 <article
                   *ngFor="let library of libraries.controls; index as i"
-                  class="relative flex items-center gap-2 bg-white p-2 rounded-md border border-slate-200 shadow-md"
+                  class="relative flex items-center gap-2 rounded-md border border-slate-200 bg-white p-2 shadow-md"
                 >
                   <button
                     type="button"
-                    class="absolute focus:ring-1 focus:!bg-opacity-200 focus:ring-red-500 outline-none top-1 right-1 p-1 hover:!bg-opacity-20 !bg-red-500 !bg-opacity-10 text-red-600 rounded-full"
+                    class="focus:!bg-opacity-200 absolute top-1 right-1 rounded-full !bg-red-500 !bg-opacity-10 p-1 text-red-600 outline-none hover:!bg-opacity-20 focus:ring-1 focus:ring-red-500"
                     (click)="removeLibraryFromList(i)"
                   >
                     <rmx-icon name="close-line" class="icon-sm"></rmx-icon>
                   </button>
-                  <img [src]="library.value.image" [alt]="library.value.name" class="w-10 h-10" />
+                  <img [src]="library.value.image" [alt]="library.value.name" class="h-10 w-10" />
                   <div>
                     <p class="font-medium line-clamp-1">{{ library.value.name }}</p>
-                    <p class="line-clamp-2 text-sm">{{ library.value.description }}</p>
+                    <p class="text-sm line-clamp-2">{{ library.value.description }}</p>
                   </div>
                 </article>
               </div>
@@ -112,13 +112,13 @@ import { LibrariesService } from '../../services/libraries.service';
           </div>
         </form>
       </div>
-      <footer class="flex items-center gap-4 mt-8">
+      <footer class="mt-8 flex items-center gap-4">
         <button zzButton variant="primary" (click)="upsert()">Save</button>
         <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
       </footer>
     </div>
     <ng-template #loader>
-      <div class="absolute top-0 right-2 h-full grid place-items-center">
+      <div class="absolute top-0 right-2 grid h-full place-items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           style="margin:auto;background:0 0;display:block;shape-rendering:auto"
@@ -156,15 +156,15 @@ import { LibrariesService } from '../../services/libraries.service';
       }
 
       form label {
-        @apply text-slate-600 mb-1 text-sm;
+        @apply mb-1 text-sm text-slate-600;
       }
 
       .suggestions {
         min-width: 200px;
-        @apply absolute z-10 bg-white border border-slate-200 shadow-xl rounded-md p-2 top-12;
+        @apply absolute top-12 z-10 rounded-md border border-slate-200 bg-white p-2 shadow-xl;
         li {
-          @apply px-2 py-1 cursor-pointer rounded-md;
-          @apply focus:bg-slate-100 hover:bg-slate-100 focus:outline-none;
+          @apply cursor-pointer rounded-md px-2 py-1;
+          @apply hover:bg-slate-100 focus:bg-slate-100 focus:outline-none;
         }
       }
     `,

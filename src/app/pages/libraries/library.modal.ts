@@ -28,7 +28,7 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
                 autocomplete="off"
                 (keydown)="refreshSuggestions($event.ctrlKey, $event.code)"
               />
-              <p class="text-xs text-slate-400 absolute -bottom-8 left-0">
+              <p class="absolute -bottom-8 left-0 text-xs text-slate-400">
                 Press <kbd>Enter</kbd> or <kbd>Ctrl</kbd> + <kbd>Space</kbd> to search
               </p>
               <ng-container *ngIf="suggestionsLoading$ | async">
@@ -56,11 +56,11 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
           <div>
             <label>Logo</label>
             <ng-container *ngIf="this.libraryForm.get('image')?.value as image; else noImage">
-              <img [src]="image" [alt]="this.libraryForm.get('name')?.value" class="w-16 h-16" />
+              <img [src]="image" [alt]="this.libraryForm.get('name')?.value" class="h-16 w-16" />
             </ng-container>
             <ng-template #noImage>
-              <div class="text-center w-16 h-16 rounded-full bg-slate-100 grid place-items-center">
-                <span class="text-gray-500 text-xs">No image</span>
+              <div class="grid h-16 w-16 place-items-center rounded-full bg-slate-100 text-center">
+                <span class="text-xs text-gray-500">No image</span>
               </div>
             </ng-template>
           </div>
@@ -74,7 +74,7 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
               </ng-container>
             </div>
           </div>
-          <fieldset class="grid md:grid-cols-2 gap-4 mt-4">
+          <fieldset class="mt-4 grid gap-4 md:grid-cols-2">
             <div>
               <label for="github">Github</label>
               <div class="relative">
@@ -99,13 +99,13 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
         </section>
       </form>
     </div>
-    <footer class="flex items-center gap-4 mt-12">
+    <footer class="mt-12 flex items-center gap-4">
       <button zzButton variant="primary" (click)="upsert()">Save</button>
       <button zzButton variant="neutral" (click)="this.modalRef.close()">Close</button>
     </footer>
 
     <ng-template #loader>
-      <div class="absolute top-0 right-2 h-full grid place-items-center">
+      <div class="absolute top-0 right-2 grid h-full place-items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           style="margin:auto;background:0 0;display:block;shape-rendering:auto"
@@ -143,15 +143,15 @@ import { Library, LibraryRequest } from '../../interfaces/library.interface';
       }
 
       form label {
-        @apply text-slate-600 mb-1 text-sm;
+        @apply mb-1 text-sm text-slate-600;
       }
 
       .suggestions {
         min-width: 200px;
-        @apply absolute z-10 bg-white border border-slate-200 shadow-xl rounded-md p-2 top-12;
+        @apply absolute top-12 z-10 rounded-md border border-slate-200 bg-white p-2 shadow-xl;
         li {
-          @apply px-2 py-1 cursor-pointer rounded-md;
-          @apply focus:bg-slate-100 hover:bg-slate-100 focus:outline-none;
+          @apply cursor-pointer rounded-md px-2 py-1;
+          @apply hover:bg-slate-100 focus:bg-slate-100 focus:outline-none;
         }
       }
     `,

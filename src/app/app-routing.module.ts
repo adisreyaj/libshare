@@ -11,10 +11,16 @@ const routes: Routes = [
     path: '',
     component: ShellComponent,
     children: [
+      // TODO: Add Home Page
+      // {
+      //   path: '',
+      //   pathMatch: 'full',
+      //   loadChildren: () => import('./pages/home/home.page').then((m) => m.HomeModule),
+      // },
       {
         path: '',
         pathMatch: 'full',
-        loadChildren: () => import('./pages/home/home.page').then((m) => m.HomeModule),
+        redirectTo: 'libraries',
       },
       {
         path: 'lists',
@@ -22,8 +28,7 @@ const routes: Routes = [
       },
       {
         path: 'libraries',
-        loadChildren: () =>
-          import('./pages/libraries/libraries.page').then((m) => m.LibrariesModule),
+        loadChildren: () => import('./pages/libraries/libraries.page').then((m) => m.LibrariesModule),
       },
     ],
   },

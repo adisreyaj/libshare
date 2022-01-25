@@ -1,8 +1,7 @@
-import { Component, NgModule, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { HeaderModule } from './components/header.component';
 import { RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-shell',
@@ -13,18 +12,8 @@ import { Subject } from 'rxjs';
     </main>
   `,
 })
-export class ShellComponent implements OnInit, OnDestroy {
-  private destroyed$ = new Subject<void>();
-
+export class ShellComponent {
   constructor(private readonly auth: AuthService) {}
-
-  ngOnInit() {
-    this.auth.getLoggedInUserDetails().subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroyed$.next();
-  }
 
   logout() {
     this.auth.logout();

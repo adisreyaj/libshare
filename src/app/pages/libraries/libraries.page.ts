@@ -16,7 +16,7 @@ import { PageHeaderModule } from '../../components/page-header.component';
   template: ` <section class="mt-10">
     <app-page-header title="Libraries" buttonText="Add New" (clicked)="openModal()"></app-page-header>
     <div class="mt-6">
-      <ul class="grid gap-4 grid-cols-4">
+      <ul class="grid grid-cols-4 gap-4">
         <li *ngFor="let library of libraries$ | async">
           <app-library-card
             [library]="library"
