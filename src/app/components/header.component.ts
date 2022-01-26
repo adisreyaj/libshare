@@ -15,8 +15,8 @@ const linkClasses = {
 @Component({
   selector: 'app-header',
   template: `
-    <header class="sticky top-0 border-b border-slate-300 bg-white">
-      <div class="box header box flex h-full items-center justify-between">
+    <header class="sticky top-0 z-10 border-b border-slate-300 bg-white">
+      <div class="box header flex h-full items-center justify-between">
         <div class="flex h-full items-center gap-2 md:gap-8">
           <a routerLink="/" class="flex items-center gap-2">
             <img src="assets/images/logo.svg" alt="Lib Share" [style.height.px]="40" />

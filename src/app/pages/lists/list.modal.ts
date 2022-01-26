@@ -101,10 +101,9 @@ import { LibrariesService } from '../../services/libraries.service';
                   >
                     <rmx-icon name="close-line" class="icon-sm"></rmx-icon>
                   </button>
-                  <img [src]="library.value.image" [alt]="library.value.name" class="h-10 w-10" />
+                  <img [src]="library.value.image" [alt]="library.value.name" class="h-10 w-10 rounded-full" />
                   <div>
                     <p class="font-medium line-clamp-1">{{ library.value.name }}</p>
-                    <p class="text-sm line-clamp-2">{{ library.value.description }}</p>
                   </div>
                 </article>
               </div>

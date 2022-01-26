@@ -10,9 +10,9 @@ import { ViewShareModule } from './view-share.component';
 @Component({
   selector: 'app-view',
   template: `
-    <div class="box gridpy-4" *ngIf="list$ | async as list">
+    <div class="py-4" *ngIf="list$ | async as list">
       <app-view-shared [list]="list" [publicMode]="true"></app-view-shared>
-      <footer class="mt-10 ">
+      <footer class="mt-10">
         <div class="flex w-full flex-col items-center justify-center">
           <a routerLink="/" class="flex items-center gap-2">
             <img src="assets/images/logo.svg" alt="Lib Share" [style.height.px]="40" />

@@ -282,13 +282,14 @@ export class LibraryModal implements OnInit {
 
   upsert() {
     if (this.libraryForm.valid && this.libraryDetails) {
-      this.modalData.isEditMode
+      (this.modalData.isEditMode
         ? this.libraries.update(this.modalData.library.id, this.getUpdatedLibraryDetails())
-        : this.libraries.addNew(this.libraryDetails).subscribe({
-            next: () => {
-              this.modalRef.close(true);
-            },
-          });
+        : this.libraries.addNew(this.libraryDetails)
+      ).subscribe({
+        next: () => {
+          this.modalRef.close(true);
+        },
+      });
     }
   }
 

@@ -7,7 +7,7 @@ import { ListsService } from '../../services/lists.service';
 @Component({
   selector: 'app-list-detail',
   template: `
-    <div class="box my-10" *ngIf="list$ | async as list">
+    <div class="my-10" *ngIf="list$ | async as list">
       <app-view-shared [list]="list"></app-view-shared>
     </div>
   `,
