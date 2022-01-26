@@ -174,7 +174,7 @@ export class ListModal implements OnInit {
   listForm = this.fb.group({
     name: ['', Validators.required],
     description: [''],
-    public: ['false', Validators.required],
+    public: [false, Validators.required],
     libraries: this.fb.array([]),
   });
 
