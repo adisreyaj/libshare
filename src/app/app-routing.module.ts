@@ -8,12 +8,17 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.page').then((m) => m.LoginModule),
   },
   {
+    path: 'signup',
+    loadChildren: () => import('./pages/signup/signup.page').then((m) => m.SignupModule),
+  },
+  {
     path: 'view/:slug',
     loadChildren: () => import('./pages/view/view.page').then((m) => m.ViewModule),
   },
   {
     path: '',
     component: ShellComponent,
+    canActivateChild: [],
     children: [
       {
         path: '',

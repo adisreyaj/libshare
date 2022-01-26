@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { API_URL } from '../core/tokens/api.token';
 import { IS_PUBLIC_API } from '../core/tokens/public-api.token';
-import { BehaviorSubject, catchError, EMPTY, tap } from 'rxjs';
+import { BehaviorSubject, catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { User } from '../interfaces/user.interface';
 import { Router } from '@angular/router';
 
@@ -31,7 +31,6 @@ export class AuthService {
         this.userSubject.next(user);
       }),
       catchError((err) => {
-        this.logout();
         return EMPTY;
       }),
     );
@@ -54,5 +53,13 @@ export class AuthService {
           this.userSubject.next(result.user);
         }),
       );
+  }
+
+  signup(credentials: { firstName: string; lastName: string; email: string; password: string }) {
+    return this.http
+      .post(`${this.apiUrl}/signup`, credentials, {
+        context: new HttpContext().set(IS_PUBLIC_API, true),
+      })
+      .pipe(switchMap(() => this.router.navigate(['/login'])));
   }
 }
