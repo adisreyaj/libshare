@@ -1,7 +1,7 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
-import { filter, mapTo, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { catchError, filter, mapTo, Observable, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { Library } from '../../interfaces/library.interface';
 import { LibrariesService } from '../../services/libraries.service';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,7 @@ import { ButtonModule, FormInputModule, ModalService } from 'zigzag';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LibraryCardModule } from '../../components/library-card.component';
 import { PageHeaderModule } from '../../components/page-header.component';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-libraries',
@@ -34,8 +35,24 @@ export class LibrariesPage {
   private readonly refreshSubject = new Subject<void>();
   private readonly refresh$ = this.refreshSubject.asObservable().pipe(startWith(null), mapTo(true));
 
-  constructor(private readonly librariesService: LibrariesService, private readonly modal: ModalService) {
-    this.libraries$ = this.refresh$.pipe(switchMap(() => this.librariesService.getAll()));
+  constructor(
+    private readonly librariesService: LibrariesService,
+    private readonly modal: ModalService,
+    public readonly loader: LoaderService,
+  ) {
+    this.libraries$ = this.refresh$.pipe(
+      tap(() => {
+        this.loader.show();
+      }),
+      switchMap(() => this.librariesService.getAll()),
+      tap(() => {
+        this.loader.hide();
+      }),
+      catchError(() => {
+        this.loader.hide();
+        return of([]);
+      }),
+    );
   }
 
   openModal() {

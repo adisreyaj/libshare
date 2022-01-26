@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ButtonModule, FormInputModule } from 'zigzag';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { LoaderService } from '../../services/loader.service';
 
 declare var VANTA: any;
 
@@ -86,7 +87,9 @@ declare var VANTA: any;
               [(ngModel)]="credentials.password"
             />
           </div>
-          <button type="submit" class="mt-10 w-full" zzButton variant="primary">Log In</button>
+          <button type="submit" class="mt-10 w-full" zzButton variant="primary" [disabled]="loader.showLoader$ | async">
+            Log In
+          </button>
         </form>
 
         <p class="mt-8">
@@ -110,7 +113,11 @@ export class LoginPage implements AfterViewInit {
     password: '',
   };
 
-  constructor(private readonly auth: AuthService, private readonly router: Router) {
+  constructor(
+    private readonly auth: AuthService,
+    private readonly router: Router,
+    public readonly loader: LoaderService,
+  ) {
     const token = localStorage.getItem('token');
     if (token != null) {
       this.router.navigate(['/']);
@@ -135,13 +142,16 @@ export class LoginPage implements AfterViewInit {
   }
 
   login() {
+    this.loader.show();
     this.auth.login(this.credentials.email, this.credentials.password).subscribe({
       next: ({ token }) => {
         localStorage.setItem('token', token);
         this.router.navigate(['/']);
+        this.loader.hide();
       },
       error: (err) => {
         console.log(err);
+        this.loader.hide();
       },
     });
   }

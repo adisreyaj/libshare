@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { ListModal } from './list.modal';
 import { ModalService } from 'zigzag';
-import { filter, mapTo, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { catchError, filter, mapTo, Observable, of, startWith, Subject, switchMap, tap } from 'rxjs';
 import { ListsService } from '../../services/lists.service';
 import { List } from '../../interfaces/list.interface';
+import { LoaderService } from '../../services/loader.service';
 
 @Component({
   selector: 'app-lists',
@@ -46,8 +47,24 @@ export class ListsPage {
   private readonly refreshSubject = new Subject<void>();
   private readonly refresh$ = this.refreshSubject.asObservable().pipe(startWith(null), mapTo(true));
 
-  constructor(private readonly listsService: ListsService, private readonly modal: ModalService) {
-    this.lists$ = this.refresh$.pipe(switchMap(() => this.listsService.getAll()));
+  constructor(
+    private readonly listsService: ListsService,
+    private readonly modal: ModalService,
+    public readonly loader: LoaderService,
+  ) {
+    this.lists$ = this.refresh$.pipe(
+      tap(() => {
+        this.loader.show();
+      }),
+      switchMap(() => this.listsService.getAll()),
+      tap(() => {
+        this.loader.hide();
+      }),
+      catchError(() => {
+        this.loader.hide();
+        return of([]);
+      }),
+    );
   }
 
   openModal() {
@@ -79,5 +96,11 @@ export class ListsPage {
     });
   }
 
-  deleteList(list: List) {}
+  deleteList(list: List) {
+    this.listsService.delete(list.id).subscribe({
+      next: () => {
+        this.refreshSubject.next();
+      },
+    });
+  }
 }

@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { ButtonModule, FormInputModule } from 'zigzag';
 import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { LoaderService } from '../../services/loader.service';
+import { catchError, tap, throwError } from 'rxjs';
 
 declare var VANTA: any;
 
@@ -118,7 +120,9 @@ declare var VANTA: any;
               [(ngModel)]="credentials.password"
             />
           </div>
-          <button type="submit" class="mt-10 w-full" zzButton variant="primary">Create Account</button>
+          <button type="submit" class="mt-10 w-full" zzButton variant="primary" [disabled]="loader.showLoader$ | async">
+            Create Account
+          </button>
         </form>
 
         <p class="mt-8">
@@ -144,7 +148,7 @@ export class SignupPage implements AfterViewInit {
     password: '',
   };
 
-  constructor(private readonly auth: AuthService, private readonly router: Router) {}
+  constructor(private readonly auth: AuthService, public readonly loader: LoaderService) {}
 
   ngAfterViewInit() {
     VANTA.HALO({
@@ -164,7 +168,19 @@ export class SignupPage implements AfterViewInit {
   }
 
   login() {
-    this.auth.signup(this.credentials).subscribe();
+    this.loader.show();
+    this.auth
+      .signup(this.credentials)
+      .pipe(
+        tap(() => {
+          this.loader.hide();
+        }),
+        catchError((err) => {
+          this.loader.hide();
+          return throwError(() => err);
+        }),
+      )
+      .subscribe();
   }
 }
 
