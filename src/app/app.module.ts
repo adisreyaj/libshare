@@ -11,6 +11,7 @@ import { ShellModule } from './shell.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { USER_DATA } from './core/tokens/user.token';
 import { AuthService } from './services/auth.service';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +27,7 @@ import { AuthService } from './services/auth.service';
   providers: [
     {
       provide: API_URL,
-      useValue: 'http://localhost:9926/api',
+      useValue: environment.apiUrl,
     },
     {
       provide: HTTP_INTERCEPTORS,
