@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  api: 'https://functions-libshare-sreyaj.harperdbcloud.com/api',
+  apiUrl: 'https://functions-libshare-sreyaj.harperdbcloud.com/api',
 };
