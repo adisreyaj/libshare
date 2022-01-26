@@ -17,16 +17,16 @@ const linkClasses = {
   template: `
     <header class="sticky top-0 border-b border-slate-300 bg-white">
       <div class="box header box flex h-full items-center justify-between">
-        <div class="flex h-full items-center gap-8">
+        <div class="flex h-full items-center gap-2 md:gap-8">
           <a routerLink="/" class="flex items-center gap-2">
             <img src="assets/images/logo.svg" alt="Lib Share" [style.height.px]="40" />
-            <div>
+            <div class="hidden md:block">
               <p class="-mb-2 font-heading text-2xl font-semibold">LibShare</p>
               <p class="font-heading text-sm text-slate-400">Curate <span>&</span> Share</p>
             </div>
           </a>
           <nav class="h-full">
-            <ul class="flex h-full items-center gap-4">
+            <ul class="flex h-full items-center gap-2 md:gap-4">
               <li routerLink="/libraries" routerLinkActive="${linkClasses.active}" class="${linkClasses.base}">
                 Libraries
               </li>
@@ -44,7 +44,7 @@ const linkClasses = {
             [alt]="user.firstName"
             class="h-10 w-10 rounded-full"
           />
-          <div class="flex flex-col items-start text-sm text-slate-700">
+          <div class="hidden flex-col items-start text-sm text-slate-700 md:flex">
             <p class="font-medium">{{ user.firstName }}</p>
             <p>{{ user.lastName }}</p>
           </div>

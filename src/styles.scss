@@ -24,6 +24,15 @@ body {
   @apply p-4;
 }
 
+@media screen and (max-width: 640px) {
+  .zz-modal-container {
+    .zz-modal {
+      @apply h-full w-full;
+      border-radius: 0 !important;
+    }
+  }
+}
+
 .icon-xxs {
   width: 13px !important;
   height: 13px !important;
