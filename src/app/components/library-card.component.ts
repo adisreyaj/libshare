@@ -34,7 +34,6 @@ import { ButtonModule, DropdownModule } from 'zigzag';
         </div>
         <div class="flex items-center">
           <div class="dropdown relative"></div>
-
           <a
             zzButton
             variant="primary"

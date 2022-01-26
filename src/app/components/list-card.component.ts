@@ -19,16 +19,21 @@ import { RouterModule } from '@angular/router';
         <p class="text-sm text-slate-500 line-clamp-2" [style.min-height.px]="40">{{ list.description }}</p>
       </header>
       <div>
-        <h4 class="text-sm">
-          Libraries <span class="text-sm text-slate-600">({{ list.libraries.length }})</span>
+        <h4 class="text-sm font-medium">
+          Libraries <span class="text-sm font-normal text-slate-600">({{ list.libraries.length }})</span>
         </h4>
-        <ul class="mt-2 flex gap-4">
-          <li *ngFor="let library of list.libraries | slice: 0:3">
+        <ul class="mt-2 flex gap-4" [style.min-height.px]="60">
+          <li class="" *ngFor="let library of list.libraries | slice: 0:3">
             <header class="flex flex-col items-center justify-center">
               <img [src]="library.image" class="h-10 w-10 rounded-full" />
               <p class="text-sm">{{ library.name }}</p>
             </header>
           </li>
+          <ng-container *ngIf="list.libraries.length > 3">
+            <li class="grid h-10 w-10 place-items-center rounded-full bg-slate-200">
+              +{{ list.libraries.length - 3 }}
+            </li>
+          </ng-container>
         </ul>
       </div>
       <footer class="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
@@ -39,19 +44,21 @@ import { RouterModule } from '@angular/router';
         <div class="flex items-center">
           <div class="dropdown relative"></div>
           <a zzButton variant="primary" size="sm" rel="noopener noreferrer" [routerLink]="['/lists', list.id]">View</a>
-          <button zzButton size="sm" [zzDropdownTrigger]="moreOptions" placement="bottom-start" class="ml-2">
+          <button zzButton size="sm" [zzDropdownTrigger]="moreOptions" [placement]="'bottom-start'" class="ml-2">
             More
             <zz-dropdown #moreOptions>
-              <li zzDropdownItem zzDropdownCloseOnClick (click)="edit.emit(list)">Edit</li>
-              <li
-                zzDropdownItem
-                zzDropdownCloseOnClick
-                *ngIf="list.public"
-                [zzClipboard]="origin + '/view/' + list.slug"
-              >
-                Copy Public Link
-              </li>
-              <li zzDropdownItem class="text-red-600" zzDropdownCloseOnClick (click)="delete.emit(list)">Delete</li>
+              <ul>
+                <li zzDropdownItem zzDropdownCloseOnClick (click)="edit.emit(list)">Edit</li>
+                <li
+                  zzDropdownItem
+                  zzDropdownCloseOnClick
+                  *ngIf="list.public"
+                  [zzClipboard]="origin + '/view/' + list.slug"
+                >
+                  Copy Public Link
+                </li>
+                <li zzDropdownItem class="text-red-600" zzDropdownCloseOnClick (click)="delete.emit(list)">Delete</li>
+              </ul>
             </zz-dropdown>
           </button>
         </div>
