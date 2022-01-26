@@ -27,8 +27,10 @@ import { ButtonModule, DropdownModule } from 'zigzag';
       <ng-container *ngTemplateOutlet="repoDetails; context: { $implicit: library }"></ng-container>
       <footer class="flex items-center justify-between border-t border-slate-200 pt-3">
         <div class="flex items-center">
-          <rmx-icon name="time-line" class="icon-xs mr-1 text-gray-500"></rmx-icon>
-          <p class="text-xs text-gray-500">{{ library.createdAt | date: 'MMM d' }}</p>
+          <ng-container *ngIf="!publicMode">
+            <rmx-icon name="time-line" class="icon-xs mr-1 text-gray-500"></rmx-icon>
+            <p class="text-xs text-gray-500">{{ library.createdAt | date: 'MMM d' }}</p>
+          </ng-container>
         </div>
         <div class="flex items-center">
           <div class="dropdown relative"></div>
@@ -42,7 +44,24 @@ import { ButtonModule, DropdownModule } from 'zigzag';
             rel="noopener noreferrer"
             >View</a
           >
-          <button zzButton size="sm" [zzDropdownTrigger]="libraryMoreOptions" placement="bottom-start" class="ml-2">
+          <a
+            *ngIf="publicMode && library.links.repository"
+            zzButton
+            class="ml-2"
+            size="sm"
+            target="_blank"
+            [href]="library.links.repository"
+            rel="noopener noreferrer"
+            >Github</a
+          >
+          <button
+            *ngIf="!publicMode"
+            zzButton
+            size="sm"
+            [zzDropdownTrigger]="libraryMoreOptions"
+            placement="bottom-start"
+            class="ml-2"
+          >
             More
             <zz-dropdown #libraryMoreOptions>
               <li zzDropdownItem>
@@ -102,6 +121,9 @@ import { ButtonModule, DropdownModule } from 'zigzag';
 export class LibraryCardComponent {
   @Input()
   library: Library | null = null;
+
+  @Input()
+  publicMode = false;
 
   @Output()
   edit = new EventEmitter<Library>();

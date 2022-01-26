@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { List } from '../interfaces/list.interface';
 import { IconModule } from '../icon.module';
 import { ButtonModule, ClipboardDirectiveModule, DropdownModule, TooltipModule } from 'zigzag';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-list-card',
@@ -37,7 +38,7 @@ import { ButtonModule, ClipboardDirectiveModule, DropdownModule, TooltipModule }
         </div>
         <div class="flex items-center">
           <div class="dropdown relative"></div>
-          <a zzButton variant="primary" size="sm" target="_blank" rel="noopener noreferrer">View</a>
+          <a zzButton variant="primary" size="sm" rel="noopener noreferrer" [routerLink]="['/lists', list.id]">View</a>
           <button zzButton size="sm" [zzDropdownTrigger]="moreOptions" placement="bottom-start" class="ml-2">
             More
             <zz-dropdown #moreOptions>
@@ -46,7 +47,7 @@ import { ButtonModule, ClipboardDirectiveModule, DropdownModule, TooltipModule }
                 zzDropdownItem
                 zzDropdownCloseOnClick
                 *ngIf="list.public"
-                [zzClipboard]="'http://localhost:4200/view/' + list.slug"
+                [zzClipboard]="origin + '/view/' + list.slug"
               >
                 Copy Public Link
               </li>
@@ -66,10 +67,20 @@ export class ListCardComponent {
 
   @Output()
   delete = new EventEmitter<List>();
+
+  readonly origin = location.origin;
 }
 
 @NgModule({
-  imports: [CommonModule, IconModule, ButtonModule, DropdownModule, TooltipModule, ClipboardDirectiveModule],
+  imports: [
+    CommonModule,
+    IconModule,
+    ButtonModule,
+    DropdownModule,
+    TooltipModule,
+    ClipboardDirectiveModule,
+    RouterModule,
+  ],
   declarations: [ListCardComponent],
   exports: [ListCardComponent],
 })

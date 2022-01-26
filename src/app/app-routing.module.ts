@@ -15,12 +15,6 @@ const routes: Routes = [
     path: '',
     component: ShellComponent,
     children: [
-      // TODO: Add Home Page
-      // {
-      //   path: '',
-      //   pathMatch: 'full',
-      //   loadChildren: () => import('./pages/home/home.page').then((m) => m.HomeModule),
-      // },
       {
         path: '',
         pathMatch: 'full',
@@ -28,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'lists',
-        loadChildren: () => import('./pages/lists/lists.page').then((m) => m.ListsModule),
+        loadChildren: () => import('./pages/lists/lists.module').then((m) => m.ListsModule),
       },
       {
         path: 'libraries',

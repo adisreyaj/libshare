@@ -1,16 +1,9 @@
-import { Component, NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { PageHeaderModule } from '../../components/page-header.component';
+import { Component } from '@angular/core';
 import { ListModal } from './list.modal';
-import { ReactiveFormsModule } from '@angular/forms';
-import { A11yModule } from '@angular/cdk/a11y';
-import { ButtonModule, DropdownModule, FormInputModule, ModalService, TooltipModule } from 'zigzag';
-import { CommonModule } from '@angular/common';
+import { ModalService } from 'zigzag';
 import { filter, mapTo, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { ListsService } from '../../services/lists.service';
 import { List } from '../../interfaces/list.interface';
-import { IconModule } from '../../icon.module';
-import { ListCardModule } from '../../components/list-card.component';
 
 @Component({
   selector: 'app-lists',
@@ -88,27 +81,3 @@ export class ListsPage {
 
   deleteList(list: List) {}
 }
-
-@NgModule({
-  declarations: [ListsPage, ListModal],
-  imports: [
-    CommonModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: ListsPage,
-      },
-    ]),
-    PageHeaderModule,
-    ReactiveFormsModule,
-    A11yModule,
-    ButtonModule,
-    FormInputModule,
-    IconModule,
-    TooltipModule,
-    DropdownModule,
-    ListCardModule,
-  ],
-  exports: [ListsPage],
-})
-export class ListsModule {}

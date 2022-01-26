@@ -10,8 +10,12 @@ import { shareReplay } from 'rxjs';
 export class ListsService {
   constructor(private readonly http: HttpClient, @Inject(API_URL) private readonly apiUrl: string) {}
 
-  getListBySlug(slug: string) {
+  getListBySlugPublic(slug: string) {
     return this.http.get<ListPublic>(`${this.apiUrl}/lists/public/${slug}`).pipe();
+  }
+
+  getList(id: string) {
+    return this.http.get<ListPublic>(`${this.apiUrl}/lists/${id}`).pipe();
   }
 
   addNew(list: ListRequestBase) {

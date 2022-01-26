@@ -4,7 +4,6 @@ import { Library } from './library.interface';
 export interface ListRequestBase {
   name: string;
   description: string;
-
   public: boolean;
 }
 
@@ -19,7 +18,7 @@ export interface List extends ListRequest {
   updatedAt: string;
 }
 
-export interface ListPublic extends ListRequestBase {
+export interface ListPublic extends Omit<List, 'libraries'> {
   libraries: Library[];
   user: User;
 }
