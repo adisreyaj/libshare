@@ -31,6 +31,7 @@ export class AuthService {
         this.userSubject.next(user);
       }),
       catchError((err) => {
+        this.logout();
         return EMPTY;
       }),
     );
