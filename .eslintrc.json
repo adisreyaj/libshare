@@ -19,6 +19,16 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@angular-eslint/component-class-suffix": [
+          "warn",
+          {
+            "suffixes": [
+              "Component",
+              "Page",
+              "Modal"
+            ]
+          }
+        ],
         "@angular-eslint/directive-selector": [
           "error",
           {

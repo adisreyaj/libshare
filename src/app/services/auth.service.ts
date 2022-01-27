@@ -30,7 +30,7 @@ export class AuthService {
       tap((user) => {
         this.userSubject.next(user);
       }),
-      catchError((err) => {
+      catchError(() => {
         this.logout();
         return EMPTY;
       }),
