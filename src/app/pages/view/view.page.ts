@@ -10,7 +10,7 @@ import { ViewShareModule } from './view-share.component';
 @Component({
   selector: 'app-view',
   template: `
-    <div class="py-4" *ngIf="list$ | async as list">
+    <div class="box py-4" *ngIf="list$ | async as list">
       <app-view-shared [list]="list" [publicMode]="true"></app-view-shared>
       <footer class="mt-10">
         <div class="flex w-full flex-col items-center justify-center">
