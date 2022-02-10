@@ -4,7 +4,7 @@
     <img src="logo.png" alt="Logo" width="100" height="100">
   </a>
 
-<h3 align="center">The WFH Store</h3>
+<h3 align="center">Lib Share</h3>
 
   <p align="center">
       Curate and share your favorite JavaScript libraries with other.
