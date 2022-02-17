@@ -41,18 +41,22 @@ Surprisingly there is no dedicated server used in the making of this application
 ```sh
 git clone https://github.com/adisreyaj/libshare.git
 ```
+2. Navigate to the folder
+```sh
+cd libshare
+```
 
-2. Initialize the submodule
+3. Initialize the submodule
 ```sh
 git submodule  update --init
 ```
 
-3. Install the dependencies
+4. Install the dependencies
 ```sh
 npm install
 ```
 
-4. Serve the UI
+5. Serve the UI
 ```sh
 npm start
 ```
