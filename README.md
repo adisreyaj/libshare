@@ -42,12 +42,17 @@ Surprisingly there is no dedicated server used in the making of this application
 git clone https://github.com/adisreyaj/libshare.git
 ```
 
-2. Install the dependencies
+2. Initialize the submodule
+```sh
+git submodule  update --init
+```
+
+3. Install the dependencies
 ```sh
 npm install
 ```
 
-3. Serve the UI
+4. Serve the UI
 ```sh
 npm start
 ```
@@ -59,3 +64,4 @@ You can now visit http://localhost:4200 to see the application running.
 - [Angular](https://angular.io/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [HarperDB](https://harperdb.io/)
+- [ZigZag Component Library](https://github.com/adisreyaj/zigzag)
